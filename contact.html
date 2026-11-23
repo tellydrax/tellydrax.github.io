@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact & CV | Wariboko Praise</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<nav>
+  <a href="index.html" class="logo">&gt;_ tellydrax@cyber:~$</a>
+  <div class="nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="competences.html">Compétences</a>
+    <a href="experiences.html">Expériences</a>
+    <a href="projets.html">Projets (9)</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+</nav>
+
+<main>
+  <section class="page-header">
+    <div class="badge-pill">📡 RECRUTEMENT & ALTERNANCE CYBERSÉCURITÉ</div>
+    <h1>Me Contacter</h1>
+    <p class="lead">Disponible pour une alternance en <strong>Cybersécurité & Sécurité des Réseaux</strong> sur Paris / Île-de-France (3 semaines en entreprise / 1 semaine à l'école).</p>
+  </section>
+
+  <div class="grid-2">
+    <!-- Direct Contact Card -->
+    <div class="card">
+      <div>
+        <h3>📇 Coordonnées Directes</h3>
+        <div class="sub">Réponse rapide par email ou téléphone</div>
+        <ul>
+          <li><strong>📧 Email :</strong> <a href="mailto:waribokopraise2005@gmail.com" style="color:var(--cyan)">waribokopraise2005@gmail.com</a></li>
+          <li><strong>📱 Téléphone :</strong> <a href="tel:+33627099159" style="color:var(--cyan)">06.27.09.91.59</a></li>
+          <li><strong>📍 Localisation :</strong> Paris, Île-de-France</li>
+          <li><strong>💻 GitHub :</strong> <a href="https://github.com/tellydrax" target="_blank" style="color:var(--cyan)">github.com/tellydrax</a></li>
+          <li><strong>🔗 LinkedIn :</strong> <a href="https://www.linkedin.com/in/wariboko-praise" target="_blank" style="color:var(--cyan)">Wariboko Praise</a></li>
+        </ul>
+      </div>
+      <div class="btn-row" style="justify-content:flex-start; margin-top:1.5rem;">
+        <a href="CV_Wariboko_Praise.pdf" target="_blank" class="btn btn-cyan">📄 Télécharger le CV (PDF)</a>
+        <a href="mailto:waribokopraise2005@gmail.com" class="btn btn-purple">✉️ Envoyer un Email</a>
+      </div>
+    </div>
+
+    <!-- Interactive Quick Mail Composer -->
+    <div class="card">
+      <h3>⚡ Préparer un Message Rapide</h3>
+      <div class="sub">Ouvre directement votre messagerie avec le message pré-rempli</div>
+      <form onsubmit="sendQuickMail(event)">
+        <div class="form-group">
+          <label for="sender-name">Votre Nom / Entreprise</label>
+          <input type="text" id="sender-name" placeholder="Ex: Camille Martin — Entreprise Cyber" required />
+        </div>
+        <div class="form-group">
+          <label for="sender-subject">Objet</label>
+          <input type="text" id="sender-subject" value="Proposition d'entretien — Alternance Cybersécurité" required />
+        </div>
+        <div class="form-group">
+          <label for="sender-msg">Message</label>
+          <textarea id="sender-msg" rows="4" placeholder="Bonjour Wariboko, votre profil nous intéresse pour un poste en alternance..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-pink">🚀 Ouvrir dans ma messagerie</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<footer>Wariboko Praise (@tellydrax) • Paris, Île-de-France • Hébergé sur GitHub Pages</footer>
+<script src="app.js"></script>
+<script>
+  function sendQuickMail(e) {
+    e.preventDefault();
+    const name = document.getElementById('sender-name').value;
+    const subject = encodeURIComponent(document.getElementById('sender-subject').value);
+    const body = encodeURIComponent(`De : ${name}\n\n${document.getElementById('sender-msg').value}`);
+    window.location.href = `mailto:waribokopraise2005@gmail.com?subject=${subject}&body=${body}`;
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wariboko Praise | Cybersécurité & Réseaux</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070b14;
+      --card: rgba(15, 23, 42, 0.85);
+      --cyan: #00f5d4;
+      --purple: #9b5de5;
+      --pink: #f15bb5;
+      --yellow: #fee440;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    canvas#matrix {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      opacity: 0.16;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(7, 11, 20, 0.8);
+      border-bottom: 1px solid rgba(0, 245, 212, 0.25);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Fira Code', monospace;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(0, 245, 212, 0.6);
+    }
+
+    .nav-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .nav-links a {
+      color: var(--text);
+      text-decoration: none;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      transition: 0.25s;
+    }
+    .nav-links a:hover { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+    }
+
+    .badge-status {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(0, 245, 212, 0.12);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 0 15px rgba(0, 245, 212, 0.25);
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0 auto 2rem;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.85rem 1.6rem;
+      border-radius: 10px;
+      font-family: 'Fira Code', monospace;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #00bbf9);
+      color: #041019;
+      box-shadow: 0 0 20px rgba(0, 245, 212, 0.4);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 28px rgba(0, 245, 212, 0.7); }
+
+    .btn-secondary {
+      background: rgba(155, 93, 229, 0.15);
+      border: 1px solid var(--purple);
+      color: #fff;
+    }
+    .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 0 20px rgba(155, 93, 229, 0.5); }
+
+    .terminal {
+      background: #0b1120;
+      border: 1px solid rgba(0, 245, 212, 0.4);
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(0, 245, 212, 0.15);
+      margin: 2.5rem auto;
+      overflow: hidden;
+      font-family: 'Fira Code', monospace;
+    }
+
+    .terminal-header {
+      background: #131c31;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+    .terminal-title { margin-left: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+
+    .terminal-body {
+      padding: 1.2rem;
+      min-height: 210px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 0.92rem;
+    }
+
+    .cmd-line { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
+    .prompt { color: var(--cyan); font-weight: 700; }
+
+    #terminal-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.92rem;
+      width: 100%;
+    }
+
+    .quick-cmds {
+      padding: 0.6rem 1.2rem;
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .chip {
+      background: rgba(0, 245, 212, 0.12);
+      border: 1px solid rgba(0, 245, 212, 0.35);
+      color: var(--cyan);
+      padding: 0.25rem 0.7rem;
+      border-radius: 6px;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .chip:hover { background: var(--cyan); color: #051019; }
+
+    section { margin: 4rem 0; }
+    .section-title {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(155, 93, 229, 0.35);
+      border-radius: 14px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--cyan);
+      box-shadow: 0 10px 25px rgba(0, 245, 212, 0.18);
+    }
+
+    .card h3 { color: #fff; margin-bottom: 0.5rem; font-size: 1.15rem; }
+    .card .meta { color: var(--pink); font-family: 'Fira Code', monospace; font-size: 0.85rem; margin-bottom: 0.8rem; }
+    .card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.95rem; }
+    .card ul li { margin-bottom: 0.4rem; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+    .tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      background: rgba(241, 91, 181, 0.15);
+      border: 1px solid rgba(241, 91, 181, 0.4);
+      color: #ff85d0;
+    }
+    .tag.cyan {
+      background: rgba(0, 245, 212, 0.12);
+      border-color: rgba(0, 245, 212, 0.4);
+      color: var(--cyan);
+    }
+    .tag.yellow {
+      background: rgba(254, 228, 64, 0.12);
+      border-color: rgba(254, 228, 64, 0.4);
+      color: var(--yellow);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: var(--muted);
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<nav>
+  <div class="logo">&gt;_ tellydrax@cyber:~$</div>
+  <div class="nav-links">
+    <a href="#terminal">Terminal</a>
+    <a href="#competences">Compétences</a>
+    <a href="#experiences">Expériences</a>
+    <a href="#projets">Projets</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<div class="container">
+  <!-- HERO -->
+  <header class="hero">
+    <div class="badge-status">🟢 DISPONIBLE — ALTERNANCE CYBERSÉCURITÉ & RÉSEAUX (3 sem. / 1 sem.)</div>
+    <h1>Wariboko Praise</h1>
+    <p class="subtitle">
+      Étudiant en 3ème année de Bachelor à <strong>Nexa Digital School (RNCP 35593)</strong> à Paris.
+      Passionné par la cybersécurité opérationnelle, l'audit et la gestion des risques.
+    </p>
+    <div class="cta-group">
+      <a href="CV_Wariboko_Praise.pdf" target="_blank" class="btn btn-primary">📄 Télécharger mon CV</a>
+      <a href="https://github.com/tellydrax" target="_blank" class="btn btn-secondary">💻 GitHub (@tellydrax)</a>
+      <a href="https://www.linkedin.com/in/wariboko-praise" target="_blank" class="btn btn-secondary">🔗 LinkedIn</a>
+    </div>
+  </header>
+
+  <!-- INTERACTIVE TERMINAL -->
+  <section id="terminal">
+    <div class="section-title">&gt;_ Console Interactive</div>
+    <div class="terminal">
+      <div class="terminal-header">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="terminal-title">bash — wariboko@nexa-cyber — tapez "help" ou cliquez ci-dessous</span>
+      </div>
+      <div class="terminal-body" id="terminal-output">
+        <div>Bienvenue sur le terminal portfolio de <span style="color:var(--cyan)">Wariboko Praise</span>.</div>
+        <div style="color:var(--muted)">Cliquez sur une commande rapide ci-dessous ou tapez <b>help</b> :</div>
+      </div>
+      <div class="quick-cmds">
+        <button class="chip" onclick="runCmd('whoami')">whoami</button>
+        <button class="chip" onclick="runCmd('

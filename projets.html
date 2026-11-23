@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projets & Labs Cyber | Wariboko Praise</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<canvas id="matrix"></canvas>
+
+<nav>
+  <a href="index.html" class="logo">&gt;_ tellydrax@cyber:~$</a>
+  <div class="nav-links">
+    <a href="index.html">Accueil</a>
+    <a href="competences.html">Compétences</a>
+    <a href="experiences.html">Expériences</a>
+    <a href="projets.html" class="active">Projets (9)</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<main>
+  <section class="page-header">
+    <div class="badge-pill">🚀 PORTFOLIO TECHNIQUE • PROJETS & LABS CYBERSÉCURITÉ</div>
+    <h1>Mes Projets & Réalisations</h1>
+    <p class="lead">Projets GitHub, architectures Active Directory durcies, audits de vulnérabilités et outils d'automatisation.</p>
+  </section>
+
+  <!-- Filter Buttons -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">Tous (9)</button>
+    <button class="filter-btn" data-filter="cyber">🔐 Cybersécurité & Audit (4)</button>
+    <button class="filter-btn" data-filter="infra">🖥️ Systèmes & Active Directory (3)</button>
+    <button class="filter-btn" data-filter="dev">⚙️ Scripts & Data (2)</button>
+  </div>
+
+  <div class="grid-3">
+    <!-- Project 1 -->
+    <div class="card project-card" data-category="dev">
+      <div>
+        <h3>1. Market Sentiment Aggregator</h3>
+        <div class="sub">Dépôt Épinglé GitHub • Data & Agrégation</div>
+        <p>Application d'agrégation et d'analyse de sentiment de marché permettant de centraliser des flux d'informations en temps réel.</p>
+        <ul>
+          <li>Collecte automatisée et structuration des données.</li>
+          <li>Code versionné et documenté sur GitHub.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="tags"><span class="tag">GitHub</span><span class="tag purple">Agrégation</span><span class="tag yellow">Data</span></div>
+        <div style="margin-top:1rem;"><a href="https://github.com/tellydrax/market-sentiment-aggregator" target="_blank" class="btn btn-cyan" style="padding:0.5rem 0.9rem; font-size:0.82rem;">Voir sur GitHub →</a></div>
+      </div>
+    </div>
+
+    <!-- Project 2 -->
+    <div class="card project-card" data-category="infra">
+      <div>
+        <h3>2. Architecture & Hardening Active Directory</h3>
+        <div class="sub">Lab Infrastructure • Windows Server</div>
+        <p>Déploiement complet d'un contrôleur de domaine Active Directory avec segmentation par OU et application de GPO de sécurité.</p>
+        <ul>
+          <li>Politique de mots de passe renforcée et verrouillage de compte.</li>
+          <li>Gestion du moindre privilège (Tiering Model) et audit des connexions.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag purple">Active Directory</span><span class="tag">GPO</span><span class="tag pink">Windows Server</span></div>
+    </div>
+
+    <!-- Project 3 -->
+    <div class="card project-card" data-category="cyber">
+      <div>
+        <h3>3. Audit de Vulnérabilités & Pentest Lab</h3>
+        <div class="sub">Cybersécurité • Kali Linux & Nmap</div>
+        <p>Simulation d'audit interne sur environnement isolé : reconnaissance réseau, énumération des services exposés et remédiation.</p>
+        <ul>
+          <li>Cartographie réseau via Nmap et analyse des CVE critiques.</li>
+          <li>Rédaction d'un rapport d'audit exécutif et plan de correction.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag">Audit</span><span class="tag pink">Nmap / Kali</span><span class="tag yellow">Gestion des risques</span></div>
+    </div>
+
+    <!-- Project 4 -->
+    <div class="card project-card" data-category="cyber">
+      <div>
+        <h3>4. Supervision SIEM & Détection d'Intrusions</h3>
+        <div class="sub">SOC / Blue Team • Wazuh & Linux</div>
+        <p>Mise en place d'une collecte centralisée des journaux (logs) Linux et Windows pour détecter les tentatives de brute-force.</p>
+        <ul>
+          <li>Alerting en temps réel sur échecs d'authentification SSH/RDP.</li>
+          <li>Création de règles de corrélation et tableaux de bord d'incidents.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag">SIEM</span><span class="tag purple">Linux</span><span class="tag pink">Blue Team</span></div>
+    </div>
+
+    <!-- Project 5 -->
+    <div class="card project-card" data-category="infra">
+      <div>
+        <h3>5. Durcissement (Hardening) Serveur Linux</h3>
+        <div class="sub">Administration Système • Debian / Ubuntu</div>
+        <p>Sécurisation d'un serveur Linux exposé : configuration pare-feu UFW, Fail2ban, authentification SSH par clés et désactivation root.</p>
+        <ul>
+          <li>Conformité aux recommandations ANSSI pour environnements Linux.</li>
+          <li>Automatisation des mises à jour de sécurité critiques.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag">Linux</span><span class="tag purple">SSH / Fail2ban</span><span class="tag yellow">ANSSI</span></div>
+    </div>
+
+    <!-- Project 6 -->
+    <div class="card project-card" data-category="infra">
+      <div>
+        <h3>6. Déploiement Automatisé de Parc IT</h3>
+        <div class="sub">Support & Industrialisation • Retour d'expérience AXENS</div>
+        <p>Standardisation du master poste de travail, installation silencieuse des logiciels métiers et inventaire du matériel.</p>
+        <ul>
+          <li>Réduction du temps de préparation des postes utilisateurs.</li>
+          <li>Vérification d'intégrité et documentation dans le Wiki interne.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag yellow">Déploiement</span><span class="tag">Windows</span><span class="tag purple">Documentation</span></div>
+    </div>
+
+    <!-- Project 7 -->
+    <div class="card project-card" data-category="cyber">
+      <div>
+        <h3>7. Analyse d'Incidents & Fuite de Données</h3>
+        <div class="sub">Projet GitHub • DATA-BREACH</div>
+        <p>Étude méthodologique des vecteurs d'exfiltration de données, évaluation de l'impact RGPD et mesures de confinement.</p>
+        <ul>
+          <li>Identification des failles d'accès et sensibilisation phishing.</li>
+          <li>Procédure de réponse à incident et sauvegarde immuable.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="tags"><span class="tag pink">Data Breach</span><span class="tag">RGPD</span><span class="tag yellow">Incident Response</span></div>
+        <div style="margin-top:1rem;"><a href="https://github.com/tellydrax/DATA-BREACH" target="_blank" class="btn btn-purple" style="padding:0.5rem 0.9rem; font-size:0.82rem;">Voir le dépôt →</a></div>
+      </div>
+    </div>
+
+    <!-- Project 8 -->
+    <div class="card project-card" data-category="dev">
+      <div>
+        <h3>8. Script d'Audit d'Intégrité & Logs</h3>
+        <div class="sub">Automatisation • Bash & PowerShell</div>
+        <p>Développement de scripts d'inspection rapide vérifiant les ports ouverts, les comptes administrateurs locaux et les hashes de fichiers.</p>
+        <ul>
+          <li>Export automatique d'un rapport horodaté en format lisible.</li>
+          <li>Détection de modifications non autorisées sur fichiers critiques.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag">Bash</span><span class="tag purple">PowerShell</span><span class="tag yellow">Automatisation</span></div>
+    </div>
+
+    <!-- Project 9 -->
+    <div class="card project-card" data-category="cyber">
+      <div>
+        <h3>9. Base de Connaissances & Wiki Sécurité</h3>
+        <div class="sub">Gouvernance & Process • Retour d'expérience The Root HUB</div>
+        <p>Conception d'un référentiel documentaire structuré couvrant les bonnes pratiques d'hygiène numérique et procédures support.</p>
+        <ul>
+          <li>Guides pas-à-pas pour utilisateurs et techniciens support.</li>
+          <li>Gestion des habilitations et traçabilité des interventions.</li>
+        </ul>
+      </div>
+      <div class="tags"><span class="tag yellow">Wiki Technique</span><span class="tag">Gouvernance</span><span class="tag purple">Process</span></div>
+    </div>
+  </div>
+</main>
+
+<footer>Wariboko Praise (@tellydrax) • Paris, Île-de-France • Hébergé sur GitHub Pages</footer>
+<script src="app.js"></script>
+</body>
+</html>

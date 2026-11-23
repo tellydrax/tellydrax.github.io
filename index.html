@@ -8,7 +8,7 @@
   <style>
     :root {
       --bg: #070b14;
-      --card: rgba(15, 23, 42, 0.85);
+      --card: rgba(15, 23, 42, 0.92);
       --cyan: #00f5d4;
       --purple: #9b5de5;
       --pink: #f15bb5;
@@ -17,7 +17,8 @@
       --muted: #94a3b8;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       background-color: var(--bg);
@@ -25,53 +26,62 @@
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
       line-height: 1.6;
+      position: relative;
     }
 
     canvas#matrix {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      z-index: -1;
+      z-index: 0;
+      pointer-events: none;
       opacity: 0.16;
     }
 
     nav {
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 1000;
       backdrop-filter: blur(12px);
-      background: rgba(7, 11, 20, 0.8);
+      background: rgba(7, 11, 20, 0.92);
       border-bottom: 1px solid rgba(0, 245, 212, 0.25);
       padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .logo {
       font-family: 'Fira Code', monospace;
       font-weight: 700;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: var(--cyan);
       text-shadow: 0 0 10px rgba(0, 245, 212, 0.6);
     }
 
-    .nav-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .nav-links { display: flex; gap: 1.4rem; flex-wrap: wrap; }
     .nav-links a {
       color: var(--text);
       text-decoration: none;
       font-family: 'Fira Code', monospace;
       font-size: 0.9rem;
-      transition: 0.25s;
+      cursor: pointer;
+      padding: 0.25rem 0.4rem;
+      transition: 0.2s;
     }
     .nav-links a:hover { color: var(--cyan); text-shadow: 0 0 8px var(--cyan); }
 
-    .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
-
-    .hero {
-      text-align: center;
-      padding: 4rem 1rem 3rem;
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
     }
+
+    .hero { text-align: center; padding: 3.5rem 1rem 2.5rem; }
 
     .badge-status {
       display: inline-block;
@@ -83,7 +93,6 @@
       font-family: 'Fira Code', monospace;
       font-size: 0.85rem;
       margin-bottom: 1.2rem;
-      box-shadow: 0 0 15px rgba(0, 245, 212, 0.25);
     }
 
     h1 {
@@ -96,18 +105,13 @@
     }
 
     .subtitle {
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       color: var(--muted);
       max-width: 720px;
       margin: 0 auto 2rem;
     }
 
-    .cta-group {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
+    .cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
     .btn {
       padding: 0.85rem 1.6rem;
@@ -115,8 +119,9 @@
       font-family: 'Fira Code', monospace;
       font-weight: 600;
       text-decoration: none;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: 0.2s;
       cursor: pointer;
+      display: inline-block;
     }
 
     .btn-primary {
@@ -124,23 +129,25 @@
       color: #041019;
       box-shadow: 0 0 20px rgba(0, 245, 212, 0.4);
     }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 28px rgba(0, 245, 212, 0.7); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(0, 245, 212, 0.7); }
 
     .btn-secondary {
-      background: rgba(155, 93, 229, 0.15);
+      background: rgba(155, 93, 229, 0.18);
       border: 1px solid var(--purple);
       color: #fff;
     }
-    .btn-secondary:hover { transform: translateY(-3px); box-shadow: 0 0 20px rgba(155, 93, 229, 0.5); }
+    .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(155, 93, 229, 0.5); }
 
+    /* Interactive Terminal */
     .terminal {
       background: #0b1120;
-      border: 1px solid rgba(0, 245, 212, 0.4);
+      border: 1px solid rgba(0, 245, 212, 0.5);
       border-radius: 12px;
       box-shadow: 0 0 30px rgba(0, 245, 212, 0.15);
-      margin: 2.5rem auto;
+      margin: 1.5rem auto;
       overflow: hidden;
       font-family: 'Fira Code', monospace;
+      cursor: text;
     }
 
     .terminal-header {
@@ -160,27 +167,35 @@
 
     .terminal-body {
       padding: 1.2rem;
-      min-height: 210px;
-      max-height: 300px;
+      min-height: 190px;
+      max-height: 290px;
       overflow-y: auto;
       font-size: 0.92rem;
     }
 
-    .cmd-line { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; }
-    .prompt { color: var(--cyan); font-weight: 700; }
+    .cmd-line {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.2rem;
+      background: rgba(0, 245, 212, 0.04);
+      border-top: 1px solid rgba(0, 245, 212, 0.2);
+    }
+    .prompt { color: var(--cyan); font-weight: 700; white-space: nowrap; }
 
     #terminal-input {
       background: transparent;
       border: none;
       outline: none;
-      color: #fff;
+      color: #ffffff;
+      caret-color: var(--cyan);
       font-family: 'Fira Code', monospace;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       width: 100%;
     }
 
     .quick-cmds {
-      padding: 0.6rem 1.2rem;
+      padding: 0.65rem 1.2rem;
       background: rgba(255,255,255,0.03);
       display: flex;
       gap: 0.6rem;
@@ -189,27 +204,24 @@
     }
 
     .chip {
-      background: rgba(0, 245, 212, 0.12);
-      border: 1px solid rgba(0, 245, 212, 0.35);
+      background: rgba(0, 245, 212, 0.14);
+      border: 1px solid rgba(0, 245, 212, 0.45);
       color: var(--cyan);
-      padding: 0.25rem 0.7rem;
+      padding: 0.3rem 0.75rem;
       border-radius: 6px;
       font-family: 'Fira Code', monospace;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       cursor: pointer;
       transition: 0.2s;
     }
     .chip:hover { background: var(--cyan); color: #051019; }
 
-    section { margin: 4rem 0; }
+    section { margin: 4.5rem 0; scroll-margin-top: 85px; }
     .section-title {
       font-family: 'Fira Code', monospace;
       font-size: 1.6rem;
       margin-bottom: 1.5rem;
       color: var(--cyan);
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
     }
 
     .grid {
@@ -223,12 +235,10 @@
       border: 1px solid rgba(155, 93, 229, 0.35);
       border-radius: 14px;
       padding: 1.5rem;
-      backdrop-filter: blur(10px);
-      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      transition: 0.25s;
     }
-
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       border-color: var(--cyan);
       box-shadow: 0 10px 25px rgba(0, 245, 212, 0.18);
     }
@@ -248,18 +258,12 @@
       border: 1px solid rgba(241, 91, 181, 0.4);
       color: #ff85d0;
     }
-    .tag.cyan {
-      background: rgba(0, 245, 212, 0.12);
-      border-color: rgba(0, 245, 212, 0.4);
-      color: var(--cyan);
-    }
-    .tag.yellow {
-      background: rgba(254, 228, 64, 0.12);
-      border-color: rgba(254, 228, 64, 0.4);
-      color: var(--yellow);
-    }
+    .tag.cyan { background: rgba(0, 245, 212, 0.12); border-color: rgba(0, 245, 212, 0.4); color: var(--cyan); }
+    .tag.yellow { background: rgba(254, 228, 64, 0.12); border-color: rgba(254, 228, 64, 0.4); color: var(--yellow); }
 
     footer {
+      position: relative;
+      z-index: 10;
       text-align: center;
       padding: 2.5rem 1rem;
       border-top: 1px solid rgba(255,255,255,0.08);
@@ -276,16 +280,15 @@
 <nav>
   <div class="logo">&gt;_ tellydrax@cyber:~$</div>
   <div class="nav-links">
-    <a href="#terminal">Terminal</a>
-    <a href="#competences">Compétences</a>
-    <a href="#experiences">Expériences</a>
-    <a href="#projets">Projets</a>
-    <a href="#contact">Contact</a>
+    <a href="#terminal" data-target="terminal">Terminal</a>
+    <a href="#competences" data-target="competences">Compétences</a>
+    <a href="#experiences" data-target="experiences">Expériences</a>
+    <a href="#projets" data-target="projets">Projets</a>
+    <a href="#contact" data-target="contact">Contact</a>
   </div>
 </nav>
 
 <div class="container">
-  <!-- HERO -->
   <header class="hero">
     <div class="badge-status">🟢 DISPONIBLE — ALTERNANCE CYBERSÉCURITÉ & RÉSEAUX (3 sem. / 1 sem.)</div>
     <h1>Wariboko Praise</h1>
@@ -300,20 +303,239 @@
     </div>
   </header>
 
-  <!-- INTERACTIVE TERMINAL -->
   <section id="terminal">
     <div class="section-title">&gt;_ Console Interactive</div>
-    <div class="terminal">
+    <div class="terminal" id="terminal-box">
       <div class="terminal-header">
         <span class="dot red"></span>
         <span class="dot yellow"></span>
         <span class="dot green"></span>
-        <span class="terminal-title">bash — wariboko@nexa-cyber — tapez "help" ou cliquez ci-dessous</span>
+        <span class="terminal-title">bash — wariboko@nexa-cyber — tapez "help" ou cliquez sur un bouton</span>
       </div>
       <div class="terminal-body" id="terminal-output">
         <div>Bienvenue sur le terminal portfolio de <span style="color:var(--cyan)">Wariboko Praise</span>.</div>
-        <div style="color:var(--muted)">Cliquez sur une commande rapide ci-dessous ou tapez <b>help</b> :</div>
+        <div style="color:var(--muted)">Cliquez dans la zone de saisie ci-dessous et tapez <b>help</b> (ou cliquez sur un bouton) :</div>
       </div>
       <div class="quick-cmds">
-        <button class="chip" onclick="runCmd('whoami')">whoami</button>
-        <button class="chip" onclick="runCmd('
+        <button type="button" class="chip" data-cmd="whoami">whoami</button>
+        <button type="button" class="chip" data-cmd="skills">skills</button>
+        <button type="button" class="chip" data-cmd="experience">experience</button>
+        <button type="button" class="chip" data-cmd="formation">formation</button>
+        <button type="button" class="chip" data-cmd="contact">contact</button>
+        <button type="button" class="chip" data-cmd="clear">clear</button>
+      </div>
+      <div class="cmd-line">
+        <span class="prompt">guest@tellydrax:~$</span>
+        <input type="text" id="terminal-input" placeholder="Cliquez ici et tapez une commande (ex: skills)..." autocomplete="off" />
+      </div>
+    </div>
+  </section>
+
+  <section id="competences">
+    <div class="section-title">🛡️ Compétences & Stack</div>
+    <div class="grid">
+      <div class="card">
+        <h3>🔐 Cybersécurité</h3>
+        <div class="meta">Audit & Protection des Actifs</div>
+        <p style="color:var(--muted); font-size:0.95rem;">Analyse des vulnérabilités, protection des infrastructures et respect strict de la confidentialité.</p>
+        <div class="tags">
+          <span class="tag cyan">Sécurité opérationnelle</span>
+          <span class="tag cyan">Audit</span>
+          <span class="tag cyan">Gestion des risques</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🖥️ Systèmes & Réseaux</h3>
+        <div class="meta">Administration & Infrastructure</div>
+        <p style="color:var(--muted); font-size:0.95rem;">Gestion d'environnements multi-OS, annuaires d'entreprise et sécurisation des accès.</p>
+        <div class="tags">
+          <span class="tag">Linux</span>
+          <span class="tag">Windows</span>
+          <span class="tag">Active Directory</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>🧰 IT, Support & Savoir-être</h3>
+        <div class="meta">Déploiement & Documentation</div>
+        <p style="color:var(--muted); font-size:0.95rem;">Rédaction de procédures (Wiki), déploiement logiciel sous délais restreints, travail d'équipe et gestion du stress.</p>
+        <div class="tags">
+          <span class="tag yellow">Déploiement logiciel</span>
+          <span class="tag yellow">Wiki & Doc technique</span>
+          <span class="tag yellow">Français / Anglais</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="experiences">
+    <div class="section-title">💼 Expériences & Formation</div>
+    <div class="grid">
+      <div class="card">
+        <h3>Stagiaire Informatique — AXENS</h3>
+        <div class="meta">07/2025 – 08/2025</div>
+        <ul>
+          <li>Déploiement et configuration de solutions logicielles sur l'ensemble du parc informatique sous délais restreints.</li>
+          <li>Vérification et mise à jour de données techniques complexes.</li>
+          <li>Organisation logistique et structuration du matériel IT.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Technicien Support — The Root HUB</h3>
+        <div class="meta">08/2023 – 05/2024</div>
+        <ul>
+          <li>Rédaction de documentations techniques et procédures (Wiki interne).</li>
+          <li>Configuration personnalisée d'outils digitaux selon les besoins utilisateurs.</li>
+          <li>Suivi autonome des dossiers techniques en toute confidentialité.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Assistant Bureautique — Mr Soft</h3>
+        <div class="meta">02/2022 – 05/2023</div>
+        <ul>
+          <li>Support au pilotage et gestion quotidienne des priorités.</li>
+          <li>Rédaction de documents officiels, comptes rendus et courriers stratégiques.</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color: var(--cyan);">
+        <h3>🎓 Formation — Nexa Digital School</h3>
+        <div class="meta">2024 – En cours | Bachelor 3ème année (RNCP 35593)</div>
+        <ul>
+          <li><strong>Rythme :</strong> 3 semaines en entreprise / 1 semaine à l'école.</li>
+          <li><strong>Spécialisation :</strong> Stratégie, audit, cybersécurité des infrastructures et gestion des risques.</li>
+          <li><strong>Précédent :</strong> WASSCE (équivalent Baccalauréat, 2022–2023).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="projets">
+    <div class="section-title">🚀 Projets GitHub</div>
+    <div class="grid">
+      <div class="card">
+        <h3>market-sentiment-aggregator</h3>
+        <div class="meta">Projet Épinglé • GitHub</div>
+        <p style="color:var(--muted); font-size:0.95rem; margin-bottom:1rem;">
+          Agrégateur d'analyse de sentiment de marché développé et versionné sur GitHub.
+        </p>
+        <a href="https://github.com/tellydrax/market-sentiment-aggregator" target="_blank" class="btn btn-secondary" style="padding:0.5rem 1rem; font-size:0.85rem;">Voir le dépôt →</a>
+      </div>
+      <div class="card">
+        <h3>Lab Cybersécurité & Infrastructure</h3>
+        <div class="meta">En cours • Active Directory & Linux</div>
+        <p style="color:var(--muted); font-size:0.95rem; margin-bottom:1rem;">
+          Déploiement et durcissement (hardening) d'un environnement Windows Server / Active Directory et Linux.
+        </p>
+        <a href="https://github.com/tellydrax" target="_blank" class="btn btn-secondary" style="padding:0.5rem 1rem; font-size:0.85rem;">Voir mon profil GitHub →</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="section-title">📡 Me Contacter</div>
+    <div class="card" style="text-align:center;">
+      <p style="font-size:1.05rem; margin-bottom:1.2rem;">
+        Vous recrutez un alternant motivé en <strong>Cybersécurité & Réseaux</strong> sur Paris / Île-de-France ?
+      </p>
+      <div class="cta-group">
+        <a href="mailto:waribokopraise2005@gmail.com" class="btn btn-primary">📧 waribokopraise2005@gmail.com</a>
+        <a href="tel:+33627099159" class="btn btn-secondary">📱 06.27.09.91.59</a>
+        <a href="CV_Wariboko_Praise.pdf" target="_blank" class="btn btn-secondary">📄 Ouvrir le CV (PDF)</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  Construit avec passion par Wariboko Praise (@tellydrax) • Hébergé sur GitHub Pages
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Smooth Navigation
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const targetId = link.getAttribute('data-target');
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          e.preventDefault();
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Matrix Background
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*';
+    const fontSize = 14;
+    const drops = Array(Math.floor(window.innerWidth / fontSize)).fill(1);
+
+    setInterval(() => {
+      ctx.fillStyle = 'rgba(7, 11, 20, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#00f5d4';
+      ctx.font = fontSize + 'px Fira Code';
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }, 45);
+
+    // Interactive Terminal
+    const output = document.getElementById('terminal-output');
+    const input = document.getElementById('terminal-input');
+    const terminalBox = document.getElementById('terminal-box');
+
+    const commands = {
+      help: 'Commandes : <span style="color:#00f5d4">whoami</span>, <span style="color:#00f5d4">skills</span>, <span style="color:#00f5d4">experience</span>, <span style="color:#00f5d4">formation</span>, <span style="color:#00f5d4">contact</span>, <span style="color:#00f5d4">clear</span>',
+      whoami: 'Wariboko Praise — Étudiant Bachelor 3 Cybersécurité & Réseaux à Nexa Digital School (Paris). En recherche d\'alternance (3 sem. entreprise / 1 sem. école).',
+      skills: '[Cyber] Sécurité opérationnelle, Audit, Gestion des risques | [Systèmes] Linux, Windows, Active Directory | [IT] Déploiement logiciel, Wiki, Git.',
+      experience: '• 07/2025-08/2025 : Stagiaire Informatique @ AXENS<br>• 08/2023-05/2024 : Technicien Support @ The Root HUB<br>• 02/2022-05/2023 : Assistant Bureautique @ Mr Soft',
+      formation: 'Bachelor Nexa Digital School 3ème année (RNCP 35593) — Stratégie, audit, cybersécurité des infrastructures et gestion des risques.',
+      contact: '📧 waribokopraise2005@gmail.com | 📱 06.27.09.91.59 | 📍 Paris, Île-de-France'
+    };
+
+    function runCmd(cmd) {
+      const clean = cmd.trim().toLowerCase();
+      if (!clean) return;
+      if (clean === 'clear') {
+        output.innerHTML = '';
+        return;
+      }
+      const line = document.createElement('div');
+      line.style.marginTop = '0.5rem';
+      line.innerHTML = `<span style="color:#00f5d4">guest@tellydrax:~$</span> ${cmd}<br><span style="color:#cbd5e1">${commands[clean] || 'Commande inconnue. Tapez <b>help</b>.'}</span>`;
+      output.appendChild(line);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    terminalBox.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('chip')) input.focus();
+    });
+
+    document.querySelectorAll('.chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        runCmd(btn.getAttribute('data-cmd'));
+        input.focus();
+      });
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        runCmd(input.value);
+        input.value = '';
+      }
+    });
+  });
+</script>
+</body>
+</html>
